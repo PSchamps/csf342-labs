@@ -2,20 +2,27 @@
 set -e
 
 LAB="$1"
-NAME="$2"
+TASK="$2"
+TB="$3"
 
-if [ -z "$LAB" ] || [ -z "$NAME" ]; then
-  echo "Usage: run.sh <lab-folder> <artefact-name>"
+if [ -z "$LAB" ] || [ -z "$TASK" ] || [ -z "$TB" ]; then
+  echo "Usage: run.sh <lab> <task> <testbench>"
+  echo "Example: run.sh lab1 task2 tb_fa.v"
   exit 1
 fi
 
-SIM="artefacts/${LAB}/${NAME}.sim"
-VCD="artefacts/${LAB}/${NAME}.vcd"
+ARTEFACT_DIR="artefacts/${LAB}"
+SIM_FILE="${ARTEFACT_DIR}/${TASK}_${TB%.v}.sim"
+VCD_FILE="${ARTEFACT_DIR}/${TASK}_${TB%.v}.vcd"
 
-if [ ! -f "$SIM" ]; then
-  echo "Error: $SIM not found"
+if [ ! -f "$SIM_FILE" ]; then
+  echo "Error: simulation binary not found:"
+  echo "  $SIM_FILE"
+  echo "Did you run compile first?"
   exit 1
 fi
 
-vvp "$SIM" +vcd="$VCD"
-echo "Generated $VCD"
+vvp "$SIM_FILE" +vcd="$VCD_FILE"
+
+echo "✔ Simulation complete:"
+echo "  $VCD_FILE"

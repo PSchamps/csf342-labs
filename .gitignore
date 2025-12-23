@@ -1,6 +1,5 @@
 # Artefacts
 *.sim
-*.vcd
 
 # Editor
 .vscode/settings.json

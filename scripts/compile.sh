@@ -2,24 +2,53 @@
 set -e
 
 LAB="$1"
-NAME="$2"
+TASK="$2"
+TB="$3"
 
-if [ -z "$LAB" ] || [ -z "$NAME" ]; then
-  echo "Usage: compile.sh <lab-folder> <artefact-name>"
+if [ -z "$LAB" ] || [ -z "$TASK" ] || [ -z "$TB" ]; then
+  echo "Usage: compile.sh <lab> <task> <testbench>"
+  echo "Example: compile.sh lab1 task2 tb_fa.v"
   exit 1
 fi
 
-SRC="labs/${LAB}/src"
-TB="labs/${LAB}/tb"
+LAB_DIR="labs/${LAB}"
+TASK_DIR="${LAB_DIR}/${TASK}"
+TB_FILE="${LAB_DIR}/tb/${TB}"
+DUT_FILE="${TASK_DIR}/dut.v"
+ARTEFACT_DIR="artefacts/${LAB}"
 
-if [ ! -d "$SRC" ] || [ ! -d "$TB" ]; then
-  echo "Error: lab folder not found"
+# Sanity checks
+if [ ! -d "$LAB_DIR" ]; then
+  echo "Error: lab not found: $LAB_DIR"
   exit 1
 fi
 
-mkdir -p artefacts
-mkdir -p artefacts/${LAB}
+if [ ! -d "$TASK_DIR" ]; then
+  echo "Error: task not found: $TASK_DIR"
+  exit 1
+fi
 
-iverilog -g2012 -Wall   -o "artefacts/${LAB}/${NAME}.sim"   $SRC/*.v $TB/*.v
+if [ ! -f "$DUT_FILE" ]; then
+  echo "Error: dut.v not found in $TASK_DIR"
+  exit 1
+fi
 
-echo "Compiled to artefacts/${LAB}/${NAME}.sim"
+if [ ! -f "$TB_FILE" ]; then
+  echo "Error: testbench not found: $TB_FILE"
+  echo "Available testbenches:"
+  ls "$LAB_DIR/tb"
+  exit 1
+fi
+
+mkdir -p "$ARTEFACT_DIR"
+
+OUT_SIM="${ARTEFACT_DIR}/${TASK}_${TB%.v}.sim"
+
+iverilog -g2012 -Wall \
+  -o "$OUT_SIM" \
+  shared/*.v \
+  "$DUT_FILE" \
+  "$TB_FILE"
+
+echo "✔ Compiled:"
+echo "  $OUT_SIM"

@@ -7,7 +7,7 @@
     "vscode": {
       "extensions": [
         "mshr-h.veriloghdl",
-        "wavetrace.vaporview"
+        "lramseyer.vaporview"
       ]
     }
   },

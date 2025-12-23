@@ -5,36 +5,37 @@
     {
       "id": "lab",
       "type": "promptString",
-      "description": "Enter lab folder (e.g. lab01)"
+      "description": "Enter lab (e.g. lab1)"
     },
     {
-      "id": "artefact",
+      "id": "task",
       "type": "promptString",
-      "description": "Enter artefact name (e.g. task1)"
+      "description": "Enter task (e.g. task2)"
+    },
+    {
+      "id": "tb",
+      "type": "promptString",
+      "description": "Enter testbench file (e.g. tb_fa.v)"
     }
   ],
 
   "tasks": [
     {
-      "label": "Compile (lab + artefact)",
+      "label": "Compile (lab + task + testbench)",
       "type": "shell",
-      "command": "./scripts/compile.sh ${input:lab} ${input:artefact}",
+      "command": "./scripts/compile.sh ${input:lab} ${input:task} ${input:tb}",
       "group": {
         "kind": "build",
         "isDefault": true
-      }
+      },
+      "problemMatcher": []
     },
     {
       "label": "Run (generate VCD)",
       "type": "shell",
-      "command": "./scripts/run.sh ${input:lab} ${input:artefact}",
-      "group": "test"
-    },
-    {
-      "label": "Generate SVG",
-      "type": "shell",
-      "command": "./scripts/svg.sh ${input:lab} ${input:artefact}",
-      "group": "test"
+      "command": "./scripts/run.sh ${input:lab} ${input:task} ${input:tb}",
+      "group": "build",
+      "problemMatcher": []
     }
   ]
 }
