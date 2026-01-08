@@ -34,7 +34,7 @@
       "label": "Run (generate VCD)",
       "type": "shell",
       "command": "./scripts/run.sh ${input:lab} ${input:task} ${input:tb}",
-      "group": "build",
+      "group": "test",
       "problemMatcher": []
     }
   ]
