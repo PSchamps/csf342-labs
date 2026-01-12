@@ -1,0 +1,17 @@
+
+`timescale 1ns/1ps
+module tb;
+  reg clk, reset;
+  wire [3:0] count;
+  dut DUT (.clk(clk), .reset(reset), .count(count));
+  initial clk=0; always #5 clk=~clk;
+  initial begin
+    reset=1; #12 reset=0;
+    repeat(10) @(posedge clk);
+    $finish;
+  end
+  initial begin
+    $dumpfile("tb_counter.vcd");
+    $dumpvars(0,tb);
+  end
+endmodule
