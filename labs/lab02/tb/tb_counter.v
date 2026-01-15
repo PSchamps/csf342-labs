@@ -6,7 +6,8 @@ module tb;
   dut DUT (.clk(clk), .reset(reset), .count(count));
   initial clk=0; always #5 clk=~clk;
   initial begin
-    reset=1; #12 reset=0;
+    reset=0; #12 reset=1
+    ;
     repeat(10) @(posedge clk);
     $finish;
   end
