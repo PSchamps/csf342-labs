@@ -67,8 +67,8 @@ Key points:
 A reset initializes hardware to a known state.
 
 Two common styles:
-- **Synchronous reset**: reset is checked inside the clocked block
-- **Asynchronous reset**: reset is included in the sensitivity list
+- **Synchronous reset**: reset is checked inside the clocked block, and thus, reset occurs at the next rising edge
+- **Asynchronous reset**: reset is included in the sensitivity list, and thus it occurs immediately when the reset signal itself switches
 
 You will implement and compare both.
 
@@ -91,7 +91,7 @@ You will observe this directly in Task 3.
 ## 3. Lab Structure
 
 ```
-labs/lab2/
+labs/lab02/
 ├── manual.md
 ├── task1/
 │   └── dut.v
@@ -114,23 +114,26 @@ labs/lab2/
 Rules:
 - Each task has exactly **one top-level module named `dut`**
 - Testbenches are provided and must **not** be modified
-- Generated files go into `artefacts/lab2/`
+- Generated files go into `artefacts/lab02/`
 
 ---
 
-## 4. Task 1: D Flip-Flop with Reset (Starter)
+## Task 1: D Flip-Flop with Active Low Reset (Starter)
 
 ### Objective
-Implement a **positive-edge-triggered D flip-flop**, and study reset behavior.
+Implement a **positive-edge-triggered D flip-flop (DFF)**, and study reset behavior.
 
 ### What is provided
 - Starter code for a D flip-flop **without reset**
 
 ### What you must do
-1. Add a **synchronous reset**
-2. Add an **asynchronous reset**
+1. Add a **synchronous _active low_ reset in task1.1**
+2. Add an **asynchronous _active low_ reset in task 1.2**
 3. Simulate both versions using the same testbench
-4. Compare waveforms
+4. Compare waveforms  
+   1. Open both VCD files simultaneously one above the other to compare.  
+   2. You should be able to explain everything that you observe in both waveforms.  
+   3. Take a screenshot and annotate the key difference, and save it at `artefacts/lab02/task1.png`
 
 ### Concepts reinforced
 - Clock edges
@@ -139,44 +142,57 @@ Implement a **positive-edge-triggered D flip-flop**, and study reset behavior.
 
 ---
 
-## 5. Task 2: Register (Structural Design)
+## Task 2: Register (Structural Design)
 
 ### Objective
 Build a **multi-bit register** by **structurally composing** the D flip-flops from Task 1.
 
 ### Requirements
+- Repeat the following for sync and async reset (task2.1 and 2.2 respectively)
 - Do not rewrite flip-flop logic
-- Instantiate multiple DFF modules
-- Use vector signals at the top level
-- Maintain clean hierarchy
+- Instantiate multiple DFF modules (copy the modules from task 1 into task 2 folder and name the modules _and_ files dff)
+- Use vector signals at the top level (i.e. `input[3:0] d`, `output[3:0] q`) instead of defining individual bits.
 
 ---
 
-## 6. Task 3: Shift Register (Blocking vs Non-blocking)
+## Task 3: Shift Register (Blocking vs Non-blocking)
 
 ### Objective
-Implement a **shift register** and observe the effect of:
+Implement a **shift register** from scratch using **behavioral modeling** and observe the effect of:
 - blocking assignments (`=`)
 - non-blocking assignments (`<=`)
 
-The provided testbench is designed to **break incorrect implementations**.
+### What is provided
+- Starter code for shift register is provided in task3.1
+
+### What you must do
+1. Compile and run task3.1 with the appropriate test bench
+2. Observe the waveforms and identify what is wrong in the functionality of the shift register
+3. The same code is provided in task3.2. Modify this code to correct the error from 3.1 by using non-blocking assignments. **Do not modify task3.1 code**.
+4. Compile and run 3.2.  
+Open the waveforms of 3.1 and 3.2 one below another.  
+Take a screenshot showing how the error is fixed and correct behavior is observed.  
+Annotate the region and add at `artefacts/lab02/task3.png`
+5. Optional: does changing the sequence of blocking statements (3.1) change the results? Find a sequence of blocking statements that will give correct behavior (although it is a WRONG implementation).
 
 ---
 
-## 7. Task 4: Counter (Up-Counter Only)
+## Task 4: Counter 
 
 ### Objective
 Design a **simple up-counter**.
 
 ### Requirements
-- Increment by 1 on every clock edge
+- Increment by 1 on every positive clock edge
 - Include reset
 - Purely sequential design
-- No bonus variants
+- task4.1: using the DFFs from task1.1 (sync reset)
+- task4.2: using the DFFs from task1.2 (async reset)
+- Compare the resulting waveforms and make sure you understand everything that you observe
 
 ---
 
-## 8. Task 5 (Homework): FSM with ROM-Style Control
+## Task 5 (Homework, evaluative): FSM for a sequential adder / subtractor
 
 ### Objective
 Design an FSM-controlled system integrating registers, arithmetic, and user-driven control.
@@ -197,7 +213,7 @@ Operation buttons `op[1:0]`:
 | 10 | Subtract |
 | 11 | Toggle halt/run |
 
-Destination select `dest`:
+Destination select button `dest`:
 - 0 → write to R0
 - 1 → write to R1
 
@@ -205,11 +221,12 @@ Buttons are **level-sensitive**.
 
 ---
 
-### FSM States (Required)
+### FSM States
 
 1. RUN_WAIT  
 2. RUN_RESULT_READY  
 3. HALTED  
+![alt text](fsm.png)
 
 FSM must be implemented **behaviorally using `case(state)` only**.
 
@@ -221,21 +238,14 @@ FSM must be implemented **behaviorally using `case(state)` only**.
 
 ---
 
-## 9. Verification Expectations
+## Submission
 
-- All designs must compile cleanly
-- All testbenches must pass
-- Waveforms are for debugging, not grading
+**After every task**
+- commit `dut.v` and `vcd` files with specific commit message, `lab02 taskx`
 
----
-
-## 10. Submission
-
-Commit:
-- `dut.v` files for completed tasks
-- This manual file
-
-Task 5 is graded as homework.
+**Task 5**
+- commit `dut.v` with the **exact commit message** `lab02-eval`
+Any commit with this name will run through the autograder, so if there is a correction, you can make it and recommit with the same message.
 
 ---
 
@@ -248,5 +258,3 @@ After Lab 2, you should be able to:
 - Design simple FSMs
 
 ---
-
-**End of Lab 2 Manual**

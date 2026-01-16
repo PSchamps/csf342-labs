@@ -8,10 +8,10 @@ module tb;
   initial begin
     reset=0; serial_in=0;
     #12 reset=1;
-    serial_in=1; @(posedge clk);
-    serial_in=0; @(posedge clk);
-    serial_in=1; @(posedge clk);
-    serial_in=1; @(posedge clk);
+    serial_in=1; @(negedge clk);
+    serial_in=0; @(negedge clk);
+    serial_in=1; @(negedge clk);
+    serial_in=1; @(negedge clk);
     #10 $finish;
   end
   initial begin

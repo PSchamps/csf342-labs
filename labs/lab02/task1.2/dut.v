@@ -1,15 +1,12 @@
 
 `timescale 1ns/1ps
-module DFF (
+module dut (
   input wire clk,
   input wire d,
   input reset,
   output reg q
 );
-  always @(posedge clk, negedge reset) begin
-  if(!reset)
-    q<=0;
-  else
+  always @(posedge clk) begin
     q <= d;
   end
 endmodule
