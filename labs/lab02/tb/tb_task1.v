@@ -13,7 +13,10 @@ module tb;
     #20 $finish;
   end
   initial begin
-    $dumpfile("tb_dff.vcd");
+    if ($value$plusargs("vcd=%s", vcd_file))
+      $dumpfile(vcd_file);
+    else
+      $dumpfile("artefacts/default.vcd");
     $dumpvars(0,tb);
   end
 endmodule
